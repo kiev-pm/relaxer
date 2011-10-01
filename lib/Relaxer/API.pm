@@ -4,7 +4,69 @@ use warnings;
 use strict;
 require Carp;
 
-our $VERSION = 0.01;
+use JSON;
+use Plack::Request;
+use Routes::Tiny;
+use Try::Tiny;
+
+use Relaxer::RunRegexp;
+
+sub new {
+    my $class = shift;
+
+    my $self = bless {@_}, $class;
+
+    $self->init_routes;
+
+    $self;
+}
+
+sub init_routes {
+    my $self = shift;
+
+    my $routes = $self->{_routes} = Routes::Tiny->new;
+
+    $routes->add_route('/api/execute',
+        defaults => {action => \&_action_regexp_execute});
+}
+
+sub to_psgi_app {
+    my $self = shift;
+
+    sub { $self->dispatch(@_) };
+}
+
+sub dispatch {
+    my ($self, $env) = @_;
+
+    my $path = $env->{PATH_INFO};
+    if (my $route = $self->{_routes}->match($path)) {
+        my $action = $route->{params}{action};
+
+        return $action->($self, $env, $route->{params});
+    }
+
+    return [404, ['Content-type' => 'text/plain'], ['Not found']];
+
+}
+
+sub render_json {
+    my ($self, $data) = @_;
+
+    [200, ['Content-Type' => 'application/json'], [encode_json $data]];
+}
+
+sub _action_regexp_execute {
+    my ($self, $env, $params) = @_;
+
+    my $req = Plack::Request->new($env);
+
+    my $regexp_params = decode_json($req->content);
+
+    my $regexp = Relaxer::RunRegexp::run_regexp($regexp_params);
+
+    $self->render_json($regexp);
+}
 
 1;
 
