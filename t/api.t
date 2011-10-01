@@ -54,7 +54,7 @@ subtest '/api/execute right arguments' => sub {
         my $res = $cb->(
             POST '/api/execute',
             Content =>
-              encode_json {text => 'test', match => 'test', flags => {}}
+              encode_json {text => ['test'], match => 'test', flags => {}}
         );
 
         is $res->code, 200;
