@@ -24,7 +24,7 @@ sub main
 
     # test 2
     $r = run_regexp({
-        text => 'foo',
+        text => [ 'foo' ],
     });
     ok( ! $r->{status},                         'No regexp' );
     is( $r->{errmsg}, 'Nothing to match',       'Error message 2 ok' );

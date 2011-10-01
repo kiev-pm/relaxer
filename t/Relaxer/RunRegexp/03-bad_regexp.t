@@ -18,7 +18,7 @@ sub main
 {
     # test 1
     my $r = run_regexp({
-        text    => 'Lorem ipsum',
+        text    => [ 'Lorem ipsum' ],
         match   => '+',
     });
 
@@ -27,7 +27,7 @@ sub main
 
     # test 2
     $r = run_regexp({
-        text    => 'Lorem ipsum',
+        text    => [ 'Lorem ipsum' ],
         match   => '(',
     });
 

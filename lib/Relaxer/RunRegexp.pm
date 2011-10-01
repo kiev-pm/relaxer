@@ -22,7 +22,7 @@ our @EXPORT_OK = qw();
 #
 # Accepts a hashref with following keys:
 #
-#    text        - input text
+#    text        - input text, array of strings
 #    match       - regular expression
 #    replace     - if defined, it's substitution text for s/// mode; otherwise, m// mode
 #    flags       - modifiers: a hashref
@@ -62,21 +62,14 @@ sub run_regexp($)
     };
 
     # Analyze params
-    $in->{text}     //= '';
     $in->{match}    //= '';
 
-    if ($in->{text} eq '' || $in->{match} eq '') {
+    if (!ref $in->{text} || ref $in->{text} ne 'ARRAY' || @{$in->{text}} == 0 || $in->{match} eq '') {
         $out->{status} = 0;
         $out->{errmsg} = 'Nothing to match';
     }
     else {
-
-        ## TODO: named grouping
-
-        # Split input to set of patterns
-        ## TODO: check EOL markers from different browsers,
-        ## save proper position in input text
-        my @patterns = $in->{batch} ? split(/\n/, $in->{text}) : ( $in->{text} );
+        my @patterns = @{$in->{text}};
 
         my $search = $in->{match}; # quotemeta($in->{match});
         my $global = $in->{flags}->{g};
@@ -120,6 +113,7 @@ sub run_regexp($)
                             groups  => [],
                         };
 
+                        ## TODO: named grouping
                         for (my $i = 1; $i <= $c; $i++) {
 
                             my $group = {
