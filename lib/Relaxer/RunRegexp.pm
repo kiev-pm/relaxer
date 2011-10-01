@@ -83,10 +83,19 @@ sub run_regexp($)
 
         # (?adluimsx-imsx:pattern)
         my $flags = '';
-        for ( qw( a d l u i m s x ) ) {
-            ## TODO: minus modifiers
+        my $flags_minus = '';
+        for ( qw( a d l u ) ) {
             $flags .= $_ if $in->{flags}->{$_};
         }
+        for ( qw( i m s x ) ) {
+            if ($in->{flags}->{$_}) {
+                $flags .= $_;
+            }
+            else {
+                $flags_minus .= $_;
+            }
+        }
+        $flags .= "-$flags_minus" if $flags_minus;
         $search = "(?$flags:$search)" if $flags;
 
         eval {  # try ...
