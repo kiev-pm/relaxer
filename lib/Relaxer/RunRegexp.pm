@@ -89,47 +89,57 @@ sub run_regexp($)
         }
         $search = "(?$flags:$search)" if $flags;
 
-        for my $patt ( @patterns ) {
+        eval {  # try ...
 
-            my $result = {
-                found   => 0,
-                matches => [],
-            };
+            for my $patt ( @patterns ) {
 
-            if (! defined $in->{replace}) {
-                # m operator
+                my $result = {
+                    found   => 0,
+                    matches => [],
+                };
 
-                while (my $c = ( $patt =~ m{$search}g )) {
+                if (! defined $in->{replace}) {
+                    # m operator
 
-                    $result->{found} = 1;
+                    while (my $c = ( $patt =~ m{$search}g )) {
 
-                    my $match = {
-                        from    => $-[0],
-                        to      => $+[0],
-                        groups  => [],
-                    };
+                        $result->{found} = 1;
 
-                    for (my $i = 1; $i <= $c; $i++) {
-
-                        my $group = {
-                            from    => $-[$i],
-                            to      => $+[$i],
+                        my $match = {
+                            from    => $-[0],
+                            to      => $+[0],
+                            groups  => [],
                         };
-                        push @{$match->{groups}}, $group;
 
+                        for (my $i = 1; $i <= $c; $i++) {
+
+                            my $group = {
+                                from    => $-[$i],
+                                to      => $+[$i],
+                            };
+                            push @{$match->{groups}}, $group;
+
+                        }
+
+                        push @{$result->{matches}}, $match;
+
+                        last if ! $global;
                     }
 
-                    push @{$result->{matches}}, $match;
-
-                    last if ! $global;
+                }
+                else {
+                    # s operator
                 }
 
+                push @{$out->{results}}, $result;
             }
-            else {
-                # s operator
-            }
+        };
 
-            push @{$out->{results}}, $result;
+        # Something happpen
+        if ($@) {
+            $out->{status}  = 0;
+            $out->{errmsg}  = $@;           ## TODO: strip filename and line
+            $out->{results} = [];
         }
     }
 
