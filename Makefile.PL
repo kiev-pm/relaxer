@@ -5,6 +5,10 @@ all_from 'lib/Relaxer.pm';
 author   q{Yaroslav Korshak <yko@cpan.org>};
 license  'perl';
 
+requires 'JSON';
+requires 'Plack';
+requires 'Routes::Tiny';
+
 build_requires 'Test::More';
 
 auto_install;

@@ -7,7 +7,6 @@ require Carp;
 use JSON;
 use Plack::Request;
 use Routes::Tiny;
-use Try::Tiny;
 
 use Relaxer::RunRegexp;
 
