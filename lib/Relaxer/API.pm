@@ -27,7 +27,7 @@ sub init_routes {
     my $routes = $self->{_routes} = Routes::Tiny->new;
 
     $routes->add_route(
-        '/api/execute',
+        '/execute',
         method   => 'POST',
         defaults => {action => \&_action_regexp_execute}
     );

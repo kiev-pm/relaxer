@@ -1,5 +1,6 @@
 use Plack::Builder;
 use Plack::Util;
+use Plack::App::File;
 use FindBin;
 
 use lib "$FindBin::Bin/lib";
@@ -10,6 +11,6 @@ builder {
 	enable "Plack::Middleware::Static",
 		path => sub { s{^/static/}{} }, root => 'htdocs/static/';
 	enable "Plack::Middleware::ContentLength";
-	$api_app;
+	mount '/api' => $api_app;
 	
 }

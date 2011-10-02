@@ -42,20 +42,20 @@ subtest '/wrong_url' => sub {
       }
 };
 
-subtest '/api/execute GET' => sub {
+subtest '/execute GET' => sub {
     test_psgi $app, sub {
         my $cb = shift;
 
-        my $res = $cb->(GET '/api/execute');
+        my $res = $cb->(GET '/execute');
         is $res->code, 404;
     }
 };
 
-subtest '/api/execute wrong arguments' => sub {
+subtest '/execute wrong arguments' => sub {
     test_psgi $app, sub {
         my $cb = shift;
 
-        my $res = $cb->(POST '/api/execute', Content => encode_json {});
+        my $res = $cb->(POST '/execute', Content => encode_json {});
         is $res->code, 200;
 
         my $data = decode_json $res->content;
@@ -63,11 +63,11 @@ subtest '/api/execute wrong arguments' => sub {
       }
 };
 
-subtest '/api/execute wrong json' => sub {
+subtest '/execute wrong json' => sub {
     test_psgi $app, sub {
         my $cb = shift;
 
-        my $res = $cb->(POST '/api/execute', Content => '{wrong json string}');
+        my $res = $cb->(POST '/execute', Content => '{wrong json string}');
         is $res->code, 400;
 
         my $data = decode_json $res->content;
@@ -76,12 +76,12 @@ subtest '/api/execute wrong json' => sub {
     }
 };
 
-subtest '/api/execute right arguments' => sub {
+subtest '/execute right arguments' => sub {
     test_psgi $app, sub {
         my $cb = shift;
 
         my $res = $cb->(
-            POST '/api/execute',
+            POST '/execute',
             Content =>
               encode_json {text => ['test'], match => 'test', flags => {}}
         );
