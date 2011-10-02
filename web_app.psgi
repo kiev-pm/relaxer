@@ -12,5 +12,6 @@ builder {
 		path => sub { s{^/static/}{} }, root => 'htdocs/static/';
 	enable "Plack::Middleware::ContentLength";
 	mount '/api' => $api_app;
+	mount '/' => Plack::App::File->new(file => 'htdocs/static/index.html');
 	
 }
