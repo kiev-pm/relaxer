@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use Plack::Response;
 use Plack::Test;
@@ -40,6 +40,15 @@ subtest '/wrong_url' => sub {
         my $res = $cb->(GET '/wrong_url');
         is $res->code, 404;
       }
+};
+
+subtest '/api/execute GET' => sub {
+    test_psgi $app, sub {
+        my $cb = shift;
+
+        my $res = $cb->(GET '/api/execute');
+        is $res->code, 404;
+    }
 };
 
 subtest '/api/execute wrong arguments' => sub {

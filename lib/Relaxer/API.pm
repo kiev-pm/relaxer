@@ -26,8 +26,11 @@ sub init_routes {
 
     my $routes = $self->{_routes} = Routes::Tiny->new;
 
-    $routes->add_route('/api/execute',
-        defaults => {action => \&_action_regexp_execute});
+    $routes->add_route(
+        '/api/execute',
+        method   => 'POST',
+        defaults => {action => \&_action_regexp_execute}
+    );
 }
 
 sub to_psgi_app {
@@ -39,8 +42,10 @@ sub to_psgi_app {
 sub dispatch {
     my ($self, $env) = @_;
 
-    my $path = $env->{PATH_INFO};
-    if (my $route = $self->{_routes}->match($path)) {
+    my $path   = $env->{PATH_INFO};
+    my $method = $env->{REQUEST_METHOD};
+
+    if (my $route = $self->{_routes}->match($path, method => $method)) {
         my $action = $route->{params}{action};
 
         return $action->($self, $env, $route->{params});
