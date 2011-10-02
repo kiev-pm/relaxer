@@ -1,46 +1,29 @@
-var test_data = {
-	'status' : 1,
-	'errmsg' : '',
-	'results' : [ {
-		'matches' : [ {
-			'to' : '5',
-			'from' : '3',
-			'groups' : [ {
-				'to' : '4',
-				'from' : '3'
-			} ]
-		}, {
-			'to' : '11',
-			'from' : '9',
-			'groups' : [ {
-				'to' : '10',
-				'from' : '9'
-			} ]
-		} ],
-		'found' : 1
-	} ]
-};
-
-var test_text = 'qwertyuiosdsdf asd gfdjgkdjfgh dflgbjndlkbjnochjbndf f';
-
-var match = {
-	'to' : '5',
-	'from' : '3',
-	'groups' : [ 
-	    {
-		'to' : '4',
-		'from' : '3'
-	     }
-	]
-};
-
-process_regexp_submit();
 function process_regexp_submit() {
-	var data; //TODO get data
-//	$.postJSON(url, data, function(data) {
-		preprocess_results(test_text, test_data.results);
-		draw_results_tree(test_data.results);
-//	});
+	var form_data = {
+			text: [$('#search_text').val()],
+			match: $('#regexp_match').val(),
+			replace: $('#regexp_replace').val(),
+			flags: {
+				i: $('#flag_i:checked').length,
+				s: $('#flag_s:checked').length,
+				m: $('#flag_m:checked').length,
+				x: $('#flag_x:checked').length,
+				a: $('#flag_a:checked').length,
+				u: $('#flag_u:checked').length,
+				l: $('#flag_l:checked').length,
+				g: $('#flag_g:checked').length
+			}
+	};
+	
+    $.postJSON('/api/execute', form_data, function(data) {
+    	if (data.status != 1) {
+    		alert(data.errmsg);
+    		return;
+    	}
+    	
+		preprocess_results(form_data.text[0], data.results);
+		draw_results_tree(data.results);
+   });
 }
 
 
@@ -48,7 +31,7 @@ function preprocess_results(text, results) {
 	for ( var i = 0; i < results.length; i++ ) {
 		if (! results[i].found) continue;
 		for ( var j = 0; j < results[i].matches.length; j++ ) {
-			var match = results[i].matches[j];	
+			var match = results[i].matches[j];
 			extract_text_to_match(text, match);
 		}
 	}
@@ -63,8 +46,7 @@ function extract_text_to_match(text, match) {
 }
 
 function draw_results_tree(results) {
-	console.log(JSON.stringify(results));
-
+	$("#result").empty().append(JSON.stringify(results));
 }
 
 

@@ -22,81 +22,81 @@
     <form>
         <fieldset>
             <label>
-                <input name="action" value="match" type="radio" checked="checked"/>
+                <input id="action" value="match" type="radio" checked="checked"/>
                 Match
             </label>
 
             <label>
-                <input name="action" value="replace" type="radio"/>
+                <input id="action" value="replace" type="radio"/>
                 Replace
             </label>
         </fieldset>
 
         <label>
             Regexp expression:
-            <input name="regexp_match" type="text"/>
+            <input id="regexp_match" type="text"/>
         </label>
 
         <fieldset>
             <label>
-                <input name="flag_i" type="checkbox" value="1"/>
+                <input id="flag_i" type="checkbox" value="1"/>
                 Ignore case (i)
             </label>
 
             <label>
-                <input name="flag_s" type="checkbox" value="1"/>
+                <input id="flag_s" type="checkbox" value="1"/>
                 Single line (s)
             </label>
 
             <label>
-                <input name="flag_m" type="checkbox" value="1"/>
+                <input id="flag_m" type="checkbox" value="1"/>
                 Multi-line (m)
             </label>
 
             <label>
-                <input name="flag_x" type="checkbox" value="1"/>
+                <input id="flag_x" type="checkbox" value="1"/>
                 Verbose (x)
             </label>
 
             <label>
-                <input name="flag_a" type="checkbox" value="1"/>
+                <input id="flag_a" type="checkbox" value="1"/>
                 FIXME (a)
             </label>
 
             <label>
-                <input name="flag_u" type="checkbox" value="1"/>
+                <input id="flag_u" type="checkbox" value="1"/>
                 Unicode (u)
             </label>
 
             <label>
-                <input name="flag_l" type="checkbox" value="1"/>
+                <input id="flag_l" type="checkbox" value="1"/>
                 Locale (l)
             </label>
 
             <label>
-                <input name="flag_g" type="checkbox" value="1"/>
+                <input id="flag_g" type="checkbox" value="1"/>
                 Global (g)
             </label>
         </fieldset>
 
         <label>
             Replacement:<br/>
-            <textarea name="regexp_replace"></textarea>
+            <textarea id="regexp_replace"></textarea>
         </label>
 
         <label>
             Search text:<br/>
-            <textarea name="search_text"></textarea>
+            <textarea id="search_text"></textarea>
         </label>
 
         <label>
-            <input name="batch" type="checkbox"/>
+            <input id="batch" type="checkbox"/>
             Batch mode
         </label>
 
         <div id="result">[Matching/replacement results go here]</div>
 
-        <input type="submit" value="Relax"/>
+        <input type="submit" value="Relax" onclick='process_regexp_submit(); return false'/>
     </form>
 </body>
 </html>
