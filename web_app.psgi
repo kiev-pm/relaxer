@@ -3,9 +3,9 @@ use Plack::Util;
 use Plack::App::File;
 use FindBin;
 
-use Relaxer::API;
-
 use lib "$FindBin::Bin/lib";
+
+use Relaxer::API;
 
 my $api_app = Relaxer::API->new->to_psgi_app;
 
