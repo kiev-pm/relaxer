@@ -8,6 +8,7 @@ license  'perl';
 requires 'JSON';
 requires 'Plack';
 requires 'Routes::Tiny';
+requires 'Try::Tiny';
 
 build_requires 'Test::More';
 

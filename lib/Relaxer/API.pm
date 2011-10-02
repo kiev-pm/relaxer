@@ -7,6 +7,7 @@ require Carp;
 use JSON;
 use Plack::Request;
 use Routes::Tiny;
+use Try::Tiny;
 
 use Relaxer::RunRegexp;
 
@@ -50,9 +51,10 @@ sub dispatch {
 }
 
 sub render_json {
-    my ($self, $data) = @_;
+    my ($self, $data, $code) = @_;
 
-    [200, ['Content-Type' => 'application/json'], [encode_json $data]];
+    $code = 200 unless defined $code;
+    [$code, ['Content-Type' => 'application/json'], [encode_json $data]];
 }
 
 sub _action_regexp_execute {
@@ -60,10 +62,15 @@ sub _action_regexp_execute {
 
     my $req = Plack::Request->new($env);
 
-    my $regexp_params = decode_json($req->content);
+
+    my $regexp_params;
+    my $r = try { $regexp_params = decode_json($req->content); undef }
+    catch {
+        $self->render_json({status => 0, errmsg => 'Invalid JSON'}, 400);
+    };
+    return $r if defined $r;
 
     my $regexp = Relaxer::RunRegexp::run_regexp($regexp_params);
-
     $self->render_json($regexp);
 }
 

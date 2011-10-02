@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use Plack::Response;
 use Plack::Test;
@@ -25,6 +25,13 @@ subtest 'render_json' => sub {
     is_deeply decode_json($res->body->[0]), {foo => 'bar'};
 };
 
+subtest 'render_json code' => sub {
+    my $res = Plack::Response->new(@{$api->render_json({foo => 'bar'}, 400)});
+
+    is $res->status, 400;
+    is $res->headers->header('Content-Type'), 'application/json';
+    is_deeply decode_json($res->body->[0]), {foo => 'bar'};
+};
 
 subtest '/wrong_url' => sub {
     test_psgi $app, sub {
@@ -45,6 +52,19 @@ subtest '/api/execute wrong arguments' => sub {
         my $data = decode_json $res->content;
         ok !$data->{status};
       }
+};
+
+subtest '/api/execute wrong json' => sub {
+    test_psgi $app, sub {
+        my $cb = shift;
+
+        my $res = $cb->(POST '/api/execute', Content => '{wrong json string}');
+        is $res->code, 400;
+
+        my $data = decode_json $res->content;
+        ok !$data->{status};
+        is $data->{errmsg}, 'Invalid JSON';
+    }
 };
 
 subtest '/api/execute right arguments' => sub {
