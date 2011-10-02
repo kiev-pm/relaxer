@@ -124,7 +124,7 @@ sub run_regexp($)
                     };
 
                     ## TODO: named groups
-                    for (my $i = 1; $i <= $c; $i++) {
+                    for (my $i = 1; $i < @-; $i++) {
 
                         my $group = {
                             from    => $-[$i],
