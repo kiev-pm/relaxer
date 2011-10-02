@@ -3,9 +3,11 @@ use Plack::Util;
 use Plack::App::File;
 use FindBin;
 
+use Relaxer::API;
+
 use lib "$FindBin::Bin/lib";
 
-my $api_app = Plack::Util::load_psgi("$FindBin::Bin/api.psgi");
+my $api_app = Relaxer::API->new->to_psgi_app;
 
 builder {
 	enable "Plack::Middleware::Static",
