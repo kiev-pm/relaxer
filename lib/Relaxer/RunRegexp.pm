@@ -166,6 +166,22 @@ sub _substitutions_sequence($)
     my ($r) = @_;
     my $seq = [];
 
+    $r =~ qr/
+        (?:
+            [^\\\$]+		# all except backslash or dollar sign
+            |
+            \\(\D)		# escaped symbol, not a digit: capture 1 - escaped symbol
+            |
+            \\(\d+)		# backslash and group number: capture 2 - group number
+            |
+            \$(\d+)		# dollar and group number: capture 3 - group number
+            |
+            \$\{(\d+)\}	        # dollar and exact group number: capture 4 - group number
+            |
+            .			# any other symbol
+        )
+    /x;     ## append /a modifier for 5.14
+
     return $seq;
 }
 # ==============================================================================
