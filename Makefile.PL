@@ -2,7 +2,7 @@ use inc::Module::Install;
 
 name     'relaxer';
 all_from 'lib/Relaxer.pm';
-author   q{Yaroslav Korshak <yko@cpan.org>};
+author   q{Kiev.pm http://kiev.pm.org/};
 license  'perl';
 
 requires 'JSON';
