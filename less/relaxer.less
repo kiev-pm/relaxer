@@ -1,0 +1,33 @@
+.match {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    .border-radius(3px 3px 3px 3px);
+
+    .add-on {
+        border-width: 0;
+        margin: 0;
+    }
+
+    textarea#regexp_match {
+        width: 350px;
+        border-radius: 0;
+        border-width: 0 1px 0 1px;
+        float: left;
+        resize: none;
+        z-index: 3;
+        position: relative;
+    }
+}
+
+#search_text {
+    width: 400px;
+}
+
+// Override twitter-bootstrap defaults
+form .input {
+    margin-left: 0px;
+    margin-bottom: 20px;
+}
