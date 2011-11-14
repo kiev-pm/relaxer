@@ -111,15 +111,14 @@
             <form id="match_regexp_form">
              <!-- Regexp -->
               <div class="input">
-                <div
-                 class="input-append match"
-                 rel="popover"
-                 data-placement="right"
-                 title="Regex"
-                 data-content="Insert here regular expression you want to evaluate. '.*' for example"
-                 >
+                <div class="input-append match">
                   <span class="add-on">m/</span>
-                  <textarea class="medium" id="regexp_match" name="regexp_match" size="16" rows="1"></textarea>
+                  <textarea class="medium" id="regexp_match" name="regexp_match" size="16" rows="1"
+                    rel="popover"
+                    data-placement="right"
+                    title="Regex"
+                    data-content="Insert here regular expression you want to evaluate. '.*' for example"
+                   ></textarea>
                   <span class="add-on">/</span>
                 </div>
                 <span class="help-block">Insert regexp you want to test</span>
@@ -143,11 +142,15 @@
            <script>
                $(function() {
                    // Activate popovers
-                   $("[rel=popover]").popover({
-                       offset: 10
-                   }).click(function(e) {
-                       e.preventDefault()
-                   })
+                   $("#search_text").popover({
+                       offset: 10,
+                       delayIn: 300,
+                   });
+                   $("#regexp_match").popover({
+                       offset: 33,
+                       delayIn: 300,
+                   });
+
                    // Activate autoresize
                    $('#regexp_match, #search_text').autoResize({
                        maxHeight: 300,
