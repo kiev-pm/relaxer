@@ -106,10 +106,20 @@
         </div>
         <div class="row">
           <div class="span10">
-            <h2>Regexp</h2>
-
             <form id="match_regexp_form">
-             <!-- Regexp -->
+              <ul class='modifiers'>
+               <li>Modifiers:</li>
+               <li><input type="checkbox" id="flag_i" /> Ignore case (i)</li>
+               <li><input type="checkbox" id="flag_s" /> Single line (s)</li>
+               <li><input type="checkbox" id="flag_m" /> Multi-line (m)</li>
+               <li><input type="checkbox" id="flag_x" /> Verbose (x)</li>
+               <li><input type="checkbox" id="flag_u" /> Unicode (u)</li>
+               <li><input type="checkbox" id="flag_l" /> Locale (l)</li>
+               <li><input type="checkbox" id="flag_g" /> Global (g)</li>
+              </ul>
+              <h2>Regexp</h2>
+
+              <!-- Regexp -->
               <div class="input">
                 <div class="input-append match">
                   <span class="add-on">m/</span>
