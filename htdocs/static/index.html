@@ -10,13 +10,14 @@
     <link href="/static/css/main.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/static/css/bootstrap.css" rel="stylesheet">
 
-    <script src="/static/js/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
     <script src="/static/js/json2.js"></script>
     <script src="/static/js/jquery.post-json.js"></script>
     <script src="/static/js/jquery.autoresize.js"></script>
-    <script src="/static/js/main.js"></script>
     <script src="/static/js/bootstrap-twipsy.js"></script>
     <script src="/static/js/bootstrap-popover.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/jquery-relaxer-popovers.js"></script>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -128,7 +129,7 @@
                     data-placement="right"
                     title="Regex"
                     data-content="Insert here regular expression you want to evaluate. '.*' for example"
-                   ></textarea>
+                   >foo(bar)</textarea>
                   <span class="add-on">/</span>
                 </div>
                 <span class="help-block">Insert regexp you want to test</span>
@@ -143,7 +144,7 @@
                  size="16" rows="1"
                  rel="popover"
                  title="String"
-                 data-placement="right" data-content="Insert here text you want to be matched by regexp above"></textarea>
+                 data-placement="right" data-content="Insert here text you want to be matched by regexp above">foobar</textarea>
                 <span class="help-block">Paste text that should be matched by regexp here</span>
              </div>
              <button type="submit" class="btn primary">Execute regexp</button>

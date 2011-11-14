@@ -1,4 +1,4 @@
-(function() {
+(function($) {
     function process_regexp_submit(e) {
         e.preventDefault();
         var form_data = {
@@ -23,8 +23,8 @@
                 return;
             }
 
-            preprocess_results(form_data.text[0], data.results);
-            draw_results_tree(data.results);
+          //  preprocess_results(form_data.text[0], data.results);
+            draw_results_tree(form_data.text[0], data.results);
         });
     }
 
@@ -46,8 +46,32 @@
         }
     }
 
-    function draw_results_tree(results) {
-        $("#result").empty().append(JSON.stringify(results));
+    function draw_results_tree(string, results) {
+        $("#result").empty();
+        for (var i = 0; i < results.length; i++) {
+            var output = "";
+            var match = results[i];
+            var pos = 0;
+            for (var m = 0; m < match.matches.length; m++) {
+                output += string.substring(pos, match.matches[m].from);
+                output += '<div class="match num_' + (m + 1) + '">';
+                pos = match.matches[m].from;
+                for (var g = 0; g < match.matches[m].groups.length; g++) {
+                    var group = match.matches[m].groups[g];
+                    output += string.substring(pos, group.from);
+                    output += '<span class="group num_' + (g + 1) + '">';
+                    output += string.substring(group.from, group.to);
+                    output += '</span>';
+                    pos = group.to;
+                }
+                output += string.substring(pos, match.matches[m].to);
+                output += '</div>';
+                pos = match.matches[m].to;
+            }
+            output += string.substring(pos, string.length);
+            $("#result").append(output);
+            $("#result").append('<br />');
+        }
     }
 
     $(function() {

@@ -2503,3 +2503,12 @@ ul.modifiers {
 ul.modifiers li:first-child {
   font-weight: bold;
 }
+#result {
+  font-size: 1.2em;
+}
+#result .match {
+  cursor: default;
+}
+#result .match .group.highlighted {
+  text-decoration: underline;
+}
