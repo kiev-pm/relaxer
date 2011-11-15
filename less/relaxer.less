@@ -44,12 +44,22 @@ ul.modifiers {
 
 #result {
     font-size: 1.2em;
+    background: #EFEFEF; 
 
     .match {
         cursor: default;
+        padding: 3px;
 
+        .group {
+            padding-bottom: 0px;
+            border: 1px solid transparent;
+            border-bottom: 1px dotted;
+        }
         .group.highlighted {
-            text-decoration: underline;
+            border-right: 1px dotted red;
+            border-left: 1px dotted red;
+            border-bottom: 0;
+            background: #E0E0E0;
         }
     }
 }
