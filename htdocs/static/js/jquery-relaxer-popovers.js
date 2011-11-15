@@ -1,7 +1,12 @@
 (function($) {
     function activate_popovers(e) {
         // Activate popovers and deny live event on this object
-        $('.group', this).twipsy({live: true, title: get_popover_text, offset: 5});
+        $('.group', this).twipsy({
+            live: true,
+            title: get_popover_text,
+            offset: 5,
+            html: true
+        });
         $('.group', this).mouseover(highlight_group);
         $('.group', this).mouseout(unhighlight_group);
 
@@ -21,11 +26,11 @@
         var classes = $(this).attr('class');
         var match = classes.match(/(^|\s)num_(\d+)/);
         if (match) {
-            return "Variable $" + match[2];
+            return "Text matched by group.<br />Content in variable $" + match[2];
         }
         return "JavaScript error";
     }
 
-    $(document).on("mouseover", ".match:not(.twipsed)",  activate_popovers);
+    $(document).on("mouseover", ".match:not(.twipsed)", activate_popovers);
 
 })(jQuery);
