@@ -9,6 +9,10 @@
         $("#result").empty();
 
         for (var i = 0; i < e.results.length; i++) {
+            if (e.results[i].found <= 0) {
+                continue;
+            }
+
             var output = "";
             var match = e.results[i];
             var pos = 0;
