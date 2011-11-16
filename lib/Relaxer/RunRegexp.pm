@@ -6,6 +6,7 @@ use strict;
 use utf8;
 
 use Data::Dumper;
+use Text::Balanced qw(extract_bracketed);
 
 use base qw(Exporter);
 
@@ -151,13 +152,64 @@ sub run_regexp($)
         # Something happpen
         if ($@) {
             $out->{status}  = 0;
-            $out->{errmsg}  = $@;           ## TODO: strip filename and line
+            $out->{errmsg}  = $@;    ## TODO: strip filename and line
             $out->{results} = [];
+            $out->{groups}  = [];
+        } else {
+            $out->{groups} = get_groups($in->{match});
         }
     }
 
     return $out;
 }
+
+=head2 get_groups
+
+    my $groups = get_groups("text (group) text");
+
+Parse regexp text and return match groups info.
+
+    [{string => '(group)', from => 5, to => 12, level => 0}, ...]
+
+=cut
+
+sub get_groups {
+    my ($match, $level, $pos) = @_;
+
+    $level ||= 0;
+    $pos   ||= 0;
+
+    my @results;
+    while ($match =~ /\(/g) {
+        my $cpos = pos($match);
+        if ($cpos > 1) {
+            substr($match, 0, $cpos - 1, '');
+            $pos += $cpos;
+        }
+
+        pos($match) = 0;    # Reset position for Text::Balanced
+        my @groups = extract_bracketed($match, '()');
+
+        last unless defined $groups[0];
+
+        my $groupstring = substr($match, 0, length($groups[0]), '');
+        push @results,
+          { string => $groupstring,
+            from   => $pos,
+            to     => $pos + length($groups[0]),
+            level  => $level,
+          };
+
+        my $grouppos = $pos + 1;
+        $pos += length($groupstring);
+        $groupstring =~ s/^\(//;
+        $groupstring =~ s/\)$//;
+        push @results, get_groups($groupstring, $level + 1, $grouppos);
+    }
+
+    return wantarray ? @results : \@results;
+}
+
 # ------------------------------------------------------------------------------
 #
 #

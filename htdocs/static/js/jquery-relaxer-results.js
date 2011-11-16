@@ -58,23 +58,25 @@
         var event_data = get_match_elem_info($(this));
 
         // TODO: match / replace
-        event_data['type'] = "match";
+        event_data['match_type'] = "match";
+        event_data['type'] = 'relaxer_match_highlight';
 
-        $(document).trigger('relaxer_match_highlight', event_data);
+        $(e.target).trigger(event_data);
     }
 
     function unhighlight_group(e) {
         var event_data = get_match_elem_info($(this));
 
         // TODO: match / replace
-        event_data['type'] = "match";
+        event_data['match_type'] = "match";
+        event_data['type'] = 'relaxer_match_unhighlight';
 
-        $(document).trigger('relaxer_match_unhighlight', event_data);
+        $(e.target).trigger(event_data);
     }
 
     function get_match_elem_info(elem) {
         // TODO: Store match number and group name in right way
-        var elem_data = {type: "match"};
+        var elem_data = {};
 
         var num_match = elem.attr('class').match(/(^|\s)num_(\d+)(\s|$)/);
         if (num_match) {
@@ -97,11 +99,11 @@
     $(document).bind('relaxer_match_done', display_match_results);
     $(document).bind('relaxer_match_error', display_match_error);
 
-    $(document).bind('relaxer_match_highlight', function() {
-        $(this).addClass('highlighted');
+    $(document).bind('relaxer_match_highlight', function(e) {
+        $(e.target).addClass('highlighted');
     });
-    $(document).bind('relaxer_match_unhighlight', function() {
-        $(this).removeClass('highlighted');
+    $(document).bind('relaxer_match_unhighlight', function(e) {
+        $(e.target).removeClass('highlighted');
     });
 
 })(jQuery);

@@ -18,6 +18,7 @@
     <script src="/static/js/bootstrap-popover.js"></script>
     <script src="/static/js/jquery-relaxer-api.js"></script>
     <script src="/static/js/jquery-relaxer-results.js"></script>
+    <script src="/static/js/jquery-relaxer-highlight-regexp.js"></script>
     <script>
       $(function () {
          $("#match_regexp_form").relaxer({type: "match"});
@@ -129,7 +130,9 @@
               <div class="input">
                 <div class="input-append match">
                   <span class="add-on">m/</span>
-                  <textarea class="medium" id="regexp_match" name="regexp_match" size="16" rows="1"
+                  <textarea
+                    class="medium" id="regexp_match" name="regexp_match" size="16" rows="1"
+                    spellcheck="false"
                     rel="popover"
                     data-placement="right"
                     title="Regex"
@@ -146,6 +149,7 @@
              <div class="input">
                 <textarea
                  class="medium" id="search_text" name="search_text"
+                 spellcheck="false"
                  size="16" rows="1"
                  rel="popover"
                  title="String"

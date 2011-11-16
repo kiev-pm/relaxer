@@ -63,7 +63,8 @@
             $(document).trigger({
                 type: 'relaxer_match_done',
                 string: form_data.text[0],
-                results: data.results
+                results: data.results,
+                groups: data.groups
             });
         });
     }
