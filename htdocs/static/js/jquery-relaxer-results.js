@@ -1,6 +1,7 @@
 (function($) {
 
     function display_match_error(e) {
+        // TODO: show pretty error message somewhere
         alert("Relaxer error: " + e.message);
     }
 
@@ -44,30 +45,59 @@
             html: true
         });
 
+        // throw additional events
         $('.group', obj).mouseover(highlight_group);
         $('.group', obj).mouseout(unhighlight_group);
     };
 
     function highlight_group(e) {
-        $(this).addClass('highlighted');
+        var event_data = get_match_elem_info($(this));
+
+        // TODO: match / replace
+        event_data['type'] = "match";
+
+        $(document).trigger('relaxer_match_highlight', event_data);
     }
 
     function unhighlight_group(e) {
-        $(this).removeClass('highlighted');
+        var event_data = get_match_elem_info($(this));
+
+        // TODO: match / replace
+        event_data['type'] = "match";
+
+        $(document).trigger('relaxer_match_unhighlight', event_data);
+    }
+
+    function get_match_elem_info(elem) {
+        // TODO: Store match number and group name in right way
+        var elem_data = {type: "match"};
+
+        var num_match = elem.attr('class').match(/(^|\s)num_(\d+)(\s|$)/);
+        if (num_match) {
+            elem_data['number'] = num_match[2];
+        }
+
+        var group_match = elem.attr('class').match(/(^|\s)named_(\S+)(\s|$)/);
+        if (group_match) {
+            elem_data['named'] = group_match[2];
+        }
+
+        return elem_data;
     }
 
     function get_popover_text(item) {
-        var classes = $(this).attr('class');
-        var match = classes.match(/(^|\s)num_(\d+)/);
-        if (match) {
-            return "Text matched by group.<br />Content in variable $" + match[2];
-        }
-        return "JavaScript error";
+        var data = get_match_elem_info($(this));
+        return "Text matched by group.<br />Content in variable $" + data.number;
     }
 
-    $(function() {
-        $(document).bind('relaxer_match_done', display_match_results);
-        $(document).bind('relaxer_match_error', display_match_error);
+    $(document).bind('relaxer_match_done', display_match_results);
+    $(document).bind('relaxer_match_error', display_match_error);
+
+    $(document).bind('relaxer_match_highlight', function() {
+        $(this).addClass('highlighted');
+    });
+    $(document).bind('relaxer_match_unhighlight', function() {
+        $(this).removeClass('highlighted');
     });
 
 })(jQuery);
