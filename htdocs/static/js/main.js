@@ -19,12 +19,19 @@
 
         $.postJSON('/api/execute', form_data, function(data) {
             if (data.status != 1) {
-                alert(data.errmsg);
+                $(document).trigger({
+                    type: 'relaxer_match_error',
+                    message: data.errmsg
+                });
                 return;
             }
 
-          //  preprocess_results(form_data.text[0], data.results);
-            draw_results_tree(form_data.text[0], data.results);
+          //  preprocess_results(form_data.string[0], data.results);
+            $(document).trigger({
+                type: 'relaxer_match_done',
+                string: form_data.text[0],
+                results: data.results
+            });
         });
     }
 
@@ -46,36 +53,43 @@
         }
     }
 
-    function draw_results_tree(string, results) {
+    function handle_match_error(e) {
+        alert("Relaxer error: " + e.message);
+    }
+
+    function draw_results_tree(e) {
         $("#result").empty();
-        for (var i = 0; i < results.length; i++) {
+
+        for (var i = 0; i < e.results.length; i++) {
             var output = "";
-            var match = results[i];
+            var match = e.results[i];
             var pos = 0;
             for (var m = 0; m < match.matches.length; m++) {
-                output += string.substring(pos, match.matches[m].from);
+                output += e.string.substring(pos, match.matches[m].from);
                 output += '<div class="match num_' + (m + 1) + '">';
                 pos = match.matches[m].from;
                 for (var g = 0; g < match.matches[m].groups.length; g++) {
                     var group = match.matches[m].groups[g];
-                    output += string.substring(pos, group.from);
+                    output += e.string.substring(pos, group.from);
                     output += '<span class="group num_' + (g + 1) + '">';
-                    output += string.substring(group.from, group.to);
+                    output += e.string.substring(group.from, group.to);
                     output += '</span>';
                     pos = group.to;
                 }
-                output += string.substring(pos, match.matches[m].to);
+                output += e.string.substring(pos, match.matches[m].to);
                 output += '</div>';
                 pos = match.matches[m].to;
             }
-            output += string.substring(pos, string.length);
+            output += e.string.substring(pos, e.string.length);
             $("#result").append(output);
             $("#result").append('<br />');
         }
     }
 
     $(function() {
-        $("#match_regexp_form").submit(process_regexp_submit)
+        $("#match_regexp_form").submit(process_regexp_submit);
+        $(document).bind('relaxer_match_done', draw_results_tree);
+        $(document).bind('relaxer_match_error', handle_match_error);
     });
 
 })(jQuery);
