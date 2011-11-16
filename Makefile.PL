@@ -9,6 +9,7 @@ requires 'JSON';
 requires 'Plack';
 requires 'Routes::Tiny';
 requires 'Try::Tiny';
+requires 'Text::Balanced';
 
 build_requires 'Test::More';
 
