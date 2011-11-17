@@ -1,7 +1,14 @@
-.group.highlighted {
+span.group {
+    padding-bottom: 0px;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px dotted;
+}
+
+span.group.highlighted {
     border-right: 1px dotted red;
     border-left: 1px dotted red;
-    border-bottom: 0;
+    border-bottom: 1px solid transparent;
     background: #E0E0E0;
 }
 
@@ -57,10 +64,5 @@ ul.modifiers {
         cursor: default;
         padding: 3px;
 
-        .group {
-            padding-bottom: 0px;
-            border: 1px solid transparent;
-            border-bottom: 1px dotted;
-        }
     }
 }

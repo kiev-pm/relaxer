@@ -2465,6 +2465,18 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
 }
+span.group {
+  padding-bottom: 0px;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-bottom: 1px dotted;
+}
+span.group.highlighted {
+  border-right: 1px dotted red;
+  border-left: 1px dotted red;
+  border-bottom: 1px solid transparent;
+  background: #E0E0E0;
+}
 .match {
   background: #f5f5f5;
   border: 1px solid #ccc;
@@ -2510,15 +2522,4 @@ ul.modifiers li:first-child {
 #result .match {
   cursor: default;
   padding: 3px;
-}
-#result .match .group {
-  padding-bottom: 0px;
-  border: 1px solid transparent;
-  border-bottom: 1px dotted;
-}
-#result .match .group.highlighted {
-  border-right: 1px dotted red;
-  border-left: 1px dotted red;
-  border-bottom: 0;
-  background: #E0E0E0;
 }
