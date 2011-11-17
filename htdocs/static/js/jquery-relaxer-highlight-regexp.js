@@ -32,9 +32,9 @@
             var text = $('#regexp_match_relaxed').text();
             var group = saved_groups[e.number - 1];
             var start = text.substring(0, group.from);
-            var end = text.substring(group.to-1, text.length);
+            var end = text.substring(group.to+1, text.length);
             var span = $('<span class="group" title="Matched regexp" />');
-            span.text(text.substring(group.from, group.to-1));
+            span.text(text.substring(group.from, group.to+1));
             $('#regexp_match_relaxed').empty().append(start).append(span).append(end);
             span.twipsy({
                 placement: "below",
@@ -46,7 +46,7 @@
         });
 
         $(document).bind('relaxer_match_unhighlight', function(e) {
-            strain_textarea($('#regexp_match'))
+            strain_textarea($('#regexp_match'));
         });
         $(document).bind('relaxer_match_done', save_match_groups);
     });

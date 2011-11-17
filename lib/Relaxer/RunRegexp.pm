@@ -181,11 +181,9 @@ sub get_groups {
 
     my @results;
     while ($match =~ /\(/g) {
-        my $cpos = pos($match);
-        if ($cpos > 1) {
-            substr($match, 0, $cpos - 1, '');
-            $pos += $cpos;
-        }
+        my $cpos = pos($match) - 1;
+        substr($match, 0, $cpos, '');
+        $pos += $cpos;
 
         pos($match) = 0;    # Reset position for Text::Balanced
         my @groups = extract_bracketed($match, '()');
@@ -196,15 +194,15 @@ sub get_groups {
         push @results,
           { string => $groupstring,
             from   => $pos,
-            to     => $pos + length($groups[0]),
+            to     => $pos + length($groups[0]) - 1,
             level  => $level,
           };
 
-        my $grouppos = $pos + 1;
+        my $grouppos = $pos;
         $pos += length($groupstring);
         $groupstring =~ s/^\(//;
         $groupstring =~ s/\)$//;
-        push @results, get_groups($groupstring, $level + 1, $grouppos);
+        push @results, get_groups($groupstring, $level + 1, $grouppos + 1);
     }
 
     return wantarray ? @results : \@results;
