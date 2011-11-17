@@ -191,12 +191,14 @@ sub get_groups {
         last unless defined $groups[0];
 
         my $groupstring = substr($match, 0, length($groups[0]), '');
-        push @results,
-          { string => $groupstring,
-            from   => $pos,
-            to     => $pos + length($groups[0]) - 1,
-            level  => $level,
-          };
+        if (is_matching_group($groupstring)) {
+            push @results,
+              { string => $groupstring,
+                from   => $pos,
+                to     => $pos + length($groups[0]) - 1,
+                level  => $level,
+              };
+        }
 
         my $grouppos = $pos;
         $pos += length($groupstring);
@@ -207,6 +209,42 @@ sub get_groups {
 
     return wantarray ? @results : \@results;
 }
+
+=head2 is_matching_group
+What is_matching_group does
+=cut
+
+sub is_matching_group {
+
+    # Named group. Matches
+    # (?<name>)
+    if ($_[0] =~ /^\(\?<[_A-Za-z][_A-Za-z0-9]*>/) {
+        return 1;
+    }
+
+    # Named group. Matches
+    # (?'name')
+    if ($_[0] =~ /^\(\?'[_A-Za-z][_A-Za-z0-9]*'/) {
+        return 1;
+    }
+
+    # Python/PRCE named group. Matches
+    # (?P<name>)
+    if ($_[0] =~ /^\(\?P<[_A-Za-z][_A-Za-z0-9]*>/) {
+        return 1;
+    }
+
+    # Anything with ? or *
+    # (?:...) - not matches
+    # (*NAME) - not matches
+    if ($_[0] =~ /^\([\?*]/) {
+        return 0;
+    }
+
+    # Only simple matching groups left now. I hope.
+    return 1;
+}
+
 
 # ------------------------------------------------------------------------------
 #

@@ -6,7 +6,7 @@ use Relaxer::RunRegexp;
 
 plan tests => 15;
 
-sub group_deeply;
+sub group_deeply; # $string_regexp, $arrayref_groups, $comment
 
 my $mock = {'text' => ['foo'], match => '', flags => {}};
 
@@ -68,21 +68,21 @@ for my $start (qw/: = ! <= <! >/) {
         {   from   => 10 + length($start),
             to     => 14 + length($start),
             level  => 0,
-            string => '(bar)'
+            string => '(baz)'
         }
       ],
       "groups starting with '${start}' should be ignored";
 }
 
 group_deeply
-  "foo(?<name>foo) (?&name) (baz)" => [
+  "foo(?<NAME>foo) (?&NAME) (baz)" => [
     {   from   => 3,
         to     => 14,
         level  => 0,
-        string => '(?<name>foo)'
+        string => '(?<NAME>foo)'
     },
-    {   from   => 26,
-        to     => 30,
+    {   from   => 25,
+        to     => 29,
         level  => 0,
         string => '(baz)'
     }
@@ -107,6 +107,7 @@ group_deeply
   'foo(|:bar)' => [],
   '"branch reset" pattern makes group detection too tricky. no support';
 
+
 sub group_deeply {
     my $regexp  = shift;
     my $compare = shift;
@@ -125,5 +126,5 @@ sub group_deeply {
         diag explain $r;
         return;
     }
-    is_deeply $r->{groups}, $compare, $description;
+    is_deeply $r->{groups}, $compare, $description or diag explain $r->{groups};
 }
