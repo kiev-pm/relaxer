@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Relaxer::RunRegexp;
 
-plan tests => 6;
+plan tests => 15;
 
 sub group_deeply;
 
@@ -51,6 +51,62 @@ group_deeply
   ],
   'nested groups';
 
+group_deeply
+  'foo(?:bar) (baz)' => [
+    {   from   => 11,
+        to     => 15,
+        level  => 0,
+        string => '(baz)'
+    }
+  ],
+  'groups that should not be matched';
+
+
+for my $start (qw/: = ! <= <! >/) {
+    group_deeply
+      "foo(?${start}bar) (baz)" => [
+        {   from   => 10 + length($start),
+            to     => 14 + length($start),
+            level  => 0,
+            string => '(bar)'
+        }
+      ],
+      "groups starting with '${start}' should be ignored";
+}
+
+group_deeply
+  "foo(?<name>foo) (?&name) (baz)" => [
+    {   from   => 3,
+        to     => 14,
+        level  => 0,
+        string => '(?<name>foo)'
+    },
+    {   from   => 26,
+        to     => 30,
+        level  => 0,
+        string => '(baz)'
+    }
+  ],
+  "reference to named group should be ignored";
+
+group_deeply
+  "foo (*PRUNE) (baz)" => [
+    {   from   => 13,
+        to     => 17,
+        level  => 0,
+        string => '(baz)'
+    }
+  ],
+  "* marked keywords should be ignored";
+
+# Should warn:
+# The "branch reset" pattern is not supported by Relaxer.
+# No group information available
+
+group_deeply
+  'foo(|:bar)' => [],
+  '"branch reset" pattern makes group detection too tricky. no support';
+
 sub group_deeply {
     my $regexp  = shift;
     my $compare = shift;
@@ -64,5 +120,10 @@ sub group_deeply {
     };
 
     my $r = run_regexp($mock);
+    if ($r->{errmsg}) {
+        fail $r->{errmsg};
+        diag explain $r;
+        return;
+    }
     is_deeply $r->{groups}, $compare, $description;
 }
