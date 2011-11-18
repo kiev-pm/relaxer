@@ -35,11 +35,20 @@
             var end = text.substring(group.to+1, text.length);
             var span = $('<span class="group" title="Matched regexp" />');
             span.text(text.substring(group.from, group.to+1));
-            $('#regexp_match_relaxed').empty().append(start).append(span).append(end);
+
+            // Quote inner content
+            var virtual = $("<span />").text(end);
+            $('#regexp_match_relaxed')
+                .empty()
+                .text(start)
+                .append(span)
+                .append(virtual);
+
             span.twipsy({
                 placement: "below",
                 offset: 7
             }).twipsy("show");
+
             span.addClass('highlighted');
             span.css('marginRight', '-1px');
             span.css('marginLeft', '-1px');
