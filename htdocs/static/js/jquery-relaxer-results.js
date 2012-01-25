@@ -12,27 +12,10 @@
             if (e.results[i].found <= 0) {
                 continue;
             }
-
-            var output = "";
             var match = e.results[i];
-            var pos = 0;
-            for (var m = 0; m < match.matches.length; m++) {
-                output += e.string.substring(pos, match.matches[m].from);
-                output += '<div class="match num_' + (m + 1) + '">';
-                pos = match.matches[m].from;
-                for (var g = 0; g < match.matches[m].groups.length; g++) {
-                    var group = match.matches[m].groups[g];
-                    output += e.string.substring(pos, group.from);
-                    output += '<span class="group num_' + (g + 1) + '">';
-                    output += e.string.substring(group.from, group.to);
-                    output += '</span>';
-                    pos = group.to;
-                }
-                output += e.string.substring(pos, match.matches[m].to);
-                output += '</div>';
-                pos = match.matches[m].to;
-            }
-            output += e.string.substring(pos, e.string.length);
+            var tokens = collect_tokens(match.matches);
+            var output = apply_tokens(e.string, tokens);
+
             $("#result").append(output);
             $("#result").append('<br />');
         }
@@ -40,6 +23,53 @@
         // Install popovers on created elements
         activate_popovers($('#result'));
     }
+    
+    function collect_tokens(matches) {
+        var tokens = [];
+        for (var m = 0; m < matches.length; m++) {
+            tokens.push({
+                str: '<div class="match num_' + (m + 1) + '">',
+                num: -100,
+                pos: matches[m].from
+            }); 
+            tokens.push( {
+                str: '</div>',
+                num: -100,
+                pos: matches[m].to                                
+            });
+            
+            for (var g = 0; g < matches[m].groups.length; g++) {
+                var group = matches[m].groups[g];
+                tokens.push({
+                    str: '<span class="group num_' + (g + 1) + '">',
+                    num: g + 1,
+                    pos: group.from
+                });
+                tokens.push({
+                    str: '</span>',
+                    num: g + 1,
+                    pos: group.to      
+                });
+            }
+        }
+        return tokens; 
+    }
+    
+    function apply_tokens(str, tokens) {
+        tokens.sort(function(a, b) {
+            var res = b.pos - a.pos;
+            if (res != 0) {
+                return res;
+            }
+            return b.num - a.num;
+        });
+        for (var i = 0; i< tokens.length; i++) {
+            var pos   = tokens[i].pos;
+            var token = tokens[i].str;
+            str = str.substr(0,pos) + token + str.substr(pos)
+        }
+        return str;
+    } 
 
     function activate_popovers(obj) {
         $('.group', obj).twipsy({
