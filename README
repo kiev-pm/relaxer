@@ -17,7 +17,18 @@ To install this module, run the following commands:
 
 DEPENDENCIES
 
-None.
+Installation:
+
+	* inc::Module::Install
+	* Test::More
+
+Runtime:
+
+	* Plack
+	* JSON
+	* Routes::Tiny
+	* Try::Tiny
+	* Text::Balanced
 
 
 COPYRIGHT AND LICENCE
